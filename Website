@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For Noku ❤️</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    height: 100vh;
+    overflow: hidden;
+    background: black;
+}
+
+/* LOCKSCREEN */
+.lockscreen {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, #111, #333);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 40px 20px;
+    z-index: 10;
+}
+
+.time {
+    font-size: 3rem;
+    text-align: center;
+}
+
+.date {
+    text-align: center;
+    opacity: 0.7;
+}
+
+.notification {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    padding: 15px;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+/* TAP SCREEN */
+.intro {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #ff4d6d, #1a1a1a);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: white;
+    z-index: 5;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s;
+}
+
+.intro.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* MAIN */
+.main {
+    opacity: 0;
+    transition: opacity 2s ease;
+}
+
+.bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: url('your-image.jpg') no-repeat center center/cover;
+    animation: zoom 20s infinite alternate ease-in-out;
+    filter: brightness(0.6);
+}
+
+@keyframes zoom {
+    from { transform: scale(1); }
+    to { transform: scale(1.1); }
+}
+
+.content {
+    position: relative;
+    text-align: center;
+    color: white;
+    z-index: 2;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 3rem;
+    animation: glow 2s infinite alternate;
+}
+
+.from {
+    margin-top: 10px;
+    opacity: 0;
+    animation: fadeIn 2s forwards;
+    animation-delay: 1.5s;
+}
+
+.message {
+    margin-top: 20px;
+    opacity: 0;
+    animation: fadeIn 3s forwards;
+    animation-delay: 3s;
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+@keyframes glow {
+    from { text-shadow: 0 0 10px #ff4d6d; }
+    to { text-shadow: 0 0 25px #ff1e56; }
+}
+
+/* Hearts */
+.heart {
+    position: absolute;
+    bottom: -20px;
+    animation: floatUp linear infinite;
+}
+
+@keyframes floatUp {
+    to {
+        transform: translateY(-100vh);
+        opacity: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- AUDIO -->
+<audio id="bgMusic" loop>
+    <source src="your-music.mp3" type="audio/mpeg">
+</audio>
+
+<!-- LOCKSCREEN -->
+<div class="lockscreen" id="lockscreen">
+    <div>
+        <div class="time" id="time"></div>
+        <div class="date" id="date"></div>
+    </div>
+
+    <div class="notification" onclick="openIntro()">
+        <strong>💌 Noku, you have 1 message</strong>
+        <span>Tap to open</span>
+    </div>
+</div>
+
+<!-- TAP SCREEN -->
+<div class="intro" id="intro" onclick="openMain()">
+    <h2>❤️ Tap to Open ❤️</h2>
+    <p>Something special is waiting...</p>
+</div>
+
+<!-- MAIN -->
+<div class="main" id="mainContent">
+    <div class="bg"></div>
+
+    <div class="content">
+        <h1>I love u Noku ❤️</h1>
+        <div class="from">from Delroy</div>
+
+        <div class="message">
+            I know I didn’t get u a birthday present,<br>
+            but hopefully this can cover it up for the meantime.<br><br>
+            from ur luvin guy ❤️
+        </div>
+    </div>
+</div>
+
+<script>
+// Time
+function updateTime() {
+    const now = new Date();
+    document.getElementById("time").innerHTML =
+        now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    document.getElementById("date").innerHTML =
+        now.toDateString();
+}
+setInterval(updateTime, 1000);
+updateTime();
+
+// Open intro + PLAY MUSIC
+function openIntro() {
+    document.getElementById("lockscreen").style.display = "none";
+    const intro = document.getElementById("intro");
+    intro.classList.add("active");
+
+    // Play music
+    const music = document.getElementById("bgMusic");
+    music.play();
+}
+
+// Open main
+function openMain() {
+    const intro = document.getElementById("intro");
+    const main = document.getElementById("mainContent");
+
+    intro.style.opacity = "0";
+
+    setTimeout(() => {
+        intro.style.display = "none";
+        main.style.opacity = "1";
+        startHearts();
+    }, 1000);
+}
+
+// Hearts
+function startHearts() {
+    setInterval(() => {
+        const heart = document.createElement("div");
+        heart.classList.add("heart");
+        heart.innerHTML = "❤️";
+
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.fontSize = (15 + Math.random() * 20) + "px";
+        heart.style.animationDuration = (3 + Math.random() * 5) + "s";
+
+        document.body.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 8000);
+    }, 300);
+}
+</script>
+
+</body>
+</html>
